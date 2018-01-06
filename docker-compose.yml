@@ -1,0 +1,18 @@
+version: '2'
+services:
+  weather:
+    build: .
+    container_name: time
+    restart: always
+    env_file: ./.env
+    logging: 
+      options: 
+        max-size: '10m'
+        max-file: '1'
+    environment: 
+      VIRTUAL_HOST: 'time.${HOSTNAME}'
+      VIRTUAL_PORT: '3000'
+networks: 
+  default:
+    external:
+      name: miot
