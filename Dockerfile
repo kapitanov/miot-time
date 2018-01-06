@@ -8,6 +8,7 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 COPY --from=build /go/src/github.com/kapitanov/miot-time/miot-time /app/miot-time
 COPY --from=build /go/src/github.com/kapitanov/miot-time/www /app/www
+COPY --from=build /usr/local/go/lib /usr/local/go/lib
 EXPOSE 3000
 WORKDIR /app
 CMD ["/app/miot-time"]
