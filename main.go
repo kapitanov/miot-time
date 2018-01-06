@@ -12,12 +12,15 @@ func init() {
 
 func main() {
 	// Initialize
-	timeInit()
+	err := timeInit()
+	if err != nil {
+		log.Fatalf("failed to init. %s\n", err)
+	}
 
 	// Connect to MQTT
-	err := mqttInit()
+	err = mqttInit()
 	if err != nil {
-		log.Fatalln("failed to connect to mqtt")
+		log.Fatalf("failed to connect to mqtt: %s\n", err)
 	}
 
 	// Run HTTP server

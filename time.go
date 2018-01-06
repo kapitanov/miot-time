@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"sync"
 	"time"
@@ -18,14 +18,18 @@ type TimeInfo struct {
 	M int `json:"m"`
 }
 
-func timeInit() {
+func timeInit() error {
 	tz := os.Getenv("TIMEZONE")
 	if tz == "" {
 		tz = "UTC"
 	}
 
-	timezone = time.FixedZone(tz, 0)
-	log.Printf("time: using timezone %s\n", timezone)
+	var err error
+	timezone, err = time.LoadLocation(tz)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("time: using timezone %s\n", timezone)
 
 	timeUpdate()
 
@@ -37,6 +41,8 @@ func timeInit() {
 			}
 		}
 	}()
+
+	return nil
 }
 
 func timeGet() *TimeInfo {
@@ -53,6 +59,8 @@ func timeUpdate() bool {
 	val := &TimeInfo{H: t.Hour(), M: t.Minute()}
 	if timeValue == nil || timeValue.H != val.H || timeValue.M != val.M {
 		timeValue = val
+
+		fmt.Printf("time: now %2d:%02d\n", val.H, val.M)
 		return true
 	}
 
